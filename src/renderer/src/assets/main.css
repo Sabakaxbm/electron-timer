@@ -1,0 +1,74 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background: transparent;
+}
+
+.app {
+  -webkit-app-region: drag;
+  display: inline-block;
+  width: fit-content;
+  height: fit-content;
+  padding: 10px;
+
+}
+
+/* основная карточка */
+.timer {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  overflow: hidden;
+  padding: 10px 18px;
+  border-radius: 14px;
+
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(10px);
+
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.25);
+}
+
+/* блок дней */
+.days {
+  display: flex;
+  align-items: center;
+  color: white;
+}
+
+.value {
+  font-size: 42px;
+  font-weight: bold;
+  color: #00ffff;
+  text-shadow: 0 0 12px rgba(0, 255, 255, 0.8);
+
+
+}
+
+.label {
+  font-size: 12px;
+  opacity: 0.7;
+
+
+}
+
+/* часы */
+.clock {
+  font-size: 36px;
+  font-weight: bold;
+  letter-spacing: 2px;
+
+  color: white;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.6);
+
+
+}
+
+/* завершение */
+.done {
+  font-size: 40px;
+  color: #00ff99;
+  text-shadow: 0 0 15px rgba(0, 255, 150, 0.8);
+
+
+}
