@@ -11,22 +11,27 @@ export function openSettingsWindow(): void {
   }
 
   settingsWindow = new BrowserWindow({
-    width: 400,
-    height: 300,
-    resizable: false,
+    width: 500,
+    height: 400,
+    resizable: true,
     title: 'Настройки',
     webPreferences: {
-      preload: join(__dirname, '../preload/index.js')
+      preload: join(__dirname, '../preload/index.js'),
+      contextIsolation: true,
+      nodeIntegration: false,
+      sandbox: false
     }
   })
 
   if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
     settingsWindow.loadURL(`${process.env['ELECTRON_RENDERER_URL']}#/settings`)
   } else {
-    settingsWindow.loadFile(join(__dirname, '../renderer/index.html'), { hash: 'settings' })
+    settingsWindow.loadFile(join(__dirname, '../renderer/index.html'), {
+      hash: 'settings'
+    })
   }
 
-  settingsWindow.on('closed', (): void => {
+  settingsWindow.on('closed', () => {
     settingsWindow = null
   })
 }

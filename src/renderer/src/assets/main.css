@@ -11,7 +11,6 @@ html, body {
   width: fit-content;
   height: fit-content;
   padding: 10px;
-
 }
 
 /* основная карточка */
@@ -22,11 +21,13 @@ html, body {
   overflow: hidden;
   padding: 10px 18px;
   border-radius: 14px;
-
+  user-select: none;
   background: rgba(0, 0, 0, 0.35);
   backdrop-filter: blur(10px);
 
   box-shadow: 0 0 20px rgba(0, 255, 255, 0.25);
+  -webkit-app-region: no-drag;
+  cursor: pointer;
 }
 
 /* блок дней */
