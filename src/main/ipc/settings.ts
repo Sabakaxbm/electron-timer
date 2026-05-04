@@ -1,5 +1,5 @@
 import { BrowserWindow, ipcMain } from 'electron'
-import { store } from '../store/settings.store'
+import { SettingsStore, store } from '../store/settings/settings.store'
 import { openSettingsWindow } from '../windows/settings-window'
 
 export function registerSettingsIpc() {
@@ -7,11 +7,11 @@ export function registerSettingsIpc() {
     openSettingsWindow()
   })
 
-  ipcMain.handle('settings:get', () => {
+  ipcMain.handle('settings:get', (): SettingsStore => {
     return store.store
   })
 
-  ipcMain.on('settings:set', (_, data) => {
+  ipcMain.on('settings:set', (_, data: SettingsStore) => {
     store.set(data)
 
     BrowserWindow.getAllWindows().forEach((win) => {
