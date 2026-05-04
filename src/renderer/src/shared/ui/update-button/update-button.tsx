@@ -1,16 +1,20 @@
 import { useState, useEffect } from 'react'
+import './index.css'
 
 export function UpdateButton() {
   const [availableVersion, setAvailableVersion] = useState('')
   const [status, setStatus] = useState('')
   const [downloading, setDownloading] = useState(false)
   const [progress, setProgress] = useState(0)
+  const [checking, setChecking] = useState(false)
 
-  // check on mount (optional)
   const checkUpdate = async () => {
-    setStatus('Проверка...')
+    setChecking(true)
+    setStatus('Проверка обновлений  ')
 
     const res = await window.appVersion.checkForUpdates()
+
+    setChecking(false)
 
     if (res.status === 'available') {
       setAvailableVersion(res.version)
@@ -55,6 +59,7 @@ export function UpdateButton() {
     const unsubError = window.appVersion.onUpdateError((msg) => {
       setStatus('Ошибка: ' + msg)
       setDownloading(false)
+      setChecking(false)
     })
 
     return () => {
@@ -66,43 +71,34 @@ export function UpdateButton() {
   }, [])
 
   return (
-    <div style={{ marginTop: 10 }}>
-      <button onClick={checkUpdate}>Проверить обновления</button>
+    <div className="update">
+      <button className="update__check" onClick={checkUpdate} disabled={checking}>
+        Проверить обновления
+      </button>
 
-      <div style={{ marginTop: 8, fontSize: 12, opacity: 0.8 }}>{status}</div>
+      <div className="update__status">
+        {status}
+        {checking && <span className="loader"> ●</span>}
+      </div>
 
       {availableVersion && !downloading && (
-        <button onClick={downloadUpdate} style={{ marginTop: 8 }}>
+        <button className="update__download" onClick={downloadUpdate}>
           Скачать обновление ({availableVersion})
         </button>
       )}
 
       {downloading && (
-        <div style={{ marginTop: 10 }}>
-          <div>Скачивание: {progress}%</div>
+        <div className="update__progress">
+          <div className="update__text">Скачивание: {progress}%</div>
 
-          <div
-            style={{
-              height: 6,
-              background: 'rgba(255,255,255,0.1)',
-              borderRadius: 4,
-              overflow: 'hidden'
-            }}
-          >
-            <div
-              style={{
-                width: `${progress}%`,
-                height: '100%',
-                background: '#4f7cff',
-                transition: 'width 0.2s ease'
-              }}
-            />
+          <div className="update__bar">
+            <div className="update__fill" style={{ width: `${progress}%` }} />
           </div>
         </div>
       )}
 
       {progress === 100 && (
-        <button style={{ marginTop: 10 }} onClick={() => window.appVersion.installUpdate()}>
+        <button className="update__install" onClick={() => window.appVersion.installUpdate()}>
           Установить и перезапустить
         </button>
       )}

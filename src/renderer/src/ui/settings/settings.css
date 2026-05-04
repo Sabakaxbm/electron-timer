@@ -18,6 +18,11 @@
   padding: 28px;
   background: linear-gradient(180deg, #1c1c2b 0%, #161625 100%);
 }
+.settings-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
 /* Заголовок */
 .container h1 {
