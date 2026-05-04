@@ -13,5 +13,11 @@ declare global {
       reset: () => void
       onUpdate(cb: (data: { date: string; color: string }) => void): () => void
     }
+    appVersion: {
+      getVersion: () => Promise<string>
+      onUpdateAvailable: (cb: (data: { version: string }) => void) => void
+      onNoUpdate: (cb: () => void) => void
+      onUpdateError: (cb: (msg: string) => void) => void
+    }
   }
 }

@@ -3,6 +3,9 @@ import { useEffect, useState } from 'react'
 export default function Settings() {
   const [date, setDate] = useState('')
   const [color, setColor] = useState('')
+  const [version, setVersion] = useState('')
+  const [latestVersion, setLatestVersion] = useState('')
+  const [updateStatus, setUpdateStatus] = useState('')
 
   useEffect(() => {
     window.settingsAPI.get().then((data) => {
@@ -23,7 +26,30 @@ export default function Settings() {
     })
   }
 
+  useEffect(() => {
+    window.settingsAPI.get().then((data) => {
+      setDate(data.date)
+      setColor(data.color)
+    })
 
+    window.appVersion.getVersion().then(setVersion)
+
+    window.appVersion.onUpdateAvailable((data) => {
+      setLatestVersion(data.version)
+      console.log(1)
+      setUpdateStatus('Доступно обновление')
+    })
+
+    window.appVersion.onNoUpdate(() => {
+      console.log(2)
+      setUpdateStatus('Обновлений нет')
+    })
+
+    window.appVersion.onUpdateError((msg) => {
+      console.log(3)
+      setUpdateStatus('Ошибка: ' + msg)
+    })
+  }, [])
 
   return (
     <div>
@@ -41,6 +67,16 @@ export default function Settings() {
 
       <button onClick={save}>Save</button>
       <button onClick={reset}>Reset</button>
+
+      <hr />
+
+      <div>
+        <p>Текущая версия: {version}</p>
+
+        <p>Статус: {updateStatus}</p>
+
+        {latestVersion && <p>Последняя версия: {latestVersion}</p>}
+      </div>
     </div>
   )
 }

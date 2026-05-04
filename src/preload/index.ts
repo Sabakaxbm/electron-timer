@@ -34,6 +34,22 @@ if (process.contextIsolated) {
       }
     })
 
+    contextBridge.exposeInMainWorld('appVersion', {
+      getVersion: () => ipcRenderer.invoke('app:get-version'),
+
+      onUpdateAvailable: (cb: (data: { version: string }) => void) => {
+        ipcRenderer.on('update:available', (_, data) => cb(data))
+      },
+
+      onNoUpdate: (cb: () => void) => {
+        ipcRenderer.on('update:none', cb)
+      },
+
+      onUpdateError: (cb: (msg: string) => void) => {
+        ipcRenderer.on('update:error', (_, msg) => cb(msg))
+      }
+    })
+
     contextBridge.exposeInMainWorld('api', api)
   } catch (error) {
     console.error('Preload error:', error)
