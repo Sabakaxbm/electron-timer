@@ -1,5 +1,6 @@
 import { contextBridge, ipcRenderer } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
+import { UpdateAvailable, UpdateDownloaded } from './types'
 
 // безопасный API для renderer
 const api = {}
@@ -37,16 +38,40 @@ if (process.contextIsolated) {
     contextBridge.exposeInMainWorld('appVersion', {
       getVersion: () => ipcRenderer.invoke('app:get-version'),
 
-      onUpdateAvailable: (cb: (data: { version: string }) => void) => {
-        ipcRenderer.on('update:available', (_, data) => cb(data))
+      checkForUpdates: () => ipcRenderer.invoke('app:check-for-updates'),
+
+      downloadUpdate: () => ipcRenderer.invoke('app:download-update'),
+
+      installUpdate: () => ipcRenderer.invoke('app:install-update'),
+
+      onUpdateAvailable: (cb: (data: UpdateAvailable) => void) => {
+        const handler = (_: Electron.IpcRendererEvent, data: UpdateAvailable) => cb(data)
+        ipcRenderer.on('update:available', handler)
+        return () => ipcRenderer.removeListener('update:available', handler)
       },
 
       onNoUpdate: (cb: () => void) => {
-        ipcRenderer.on('update:none', cb)
+        const handler = () => cb()
+        ipcRenderer.on('update:none', handler)
+        return () => ipcRenderer.removeListener('update:none', handler)
       },
 
       onUpdateError: (cb: (msg: string) => void) => {
-        ipcRenderer.on('update:error', (_, msg) => cb(msg))
+        const handler = (_: Electron.IpcRendererEvent, msg: string) => cb(msg)
+        ipcRenderer.on('update:error', handler)
+        return () => ipcRenderer.removeListener('update:error', handler)
+      },
+
+      onDownloadProgress: (cb: (percent: number) => void) => {
+        const handler = (_: Electron.IpcRendererEvent, percent: number) => cb(percent)
+        ipcRenderer.on('update:progress', handler)
+        return () => ipcRenderer.removeListener('update:progress', handler)
+      },
+
+      onDownloaded: (cb: (data: UpdateDownloaded) => void) => {
+        const handler = (_: Electron.IpcRendererEvent, data: UpdateDownloaded) => cb(data)
+        ipcRenderer.on('update:downloaded', handler)
+        return () => ipcRenderer.removeListener('update:downloaded', handler)
       }
     })
 

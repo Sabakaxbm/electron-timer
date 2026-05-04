@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { UpdateButton } from '@renderer/shared/ui/update-button/update-button'
 
 export default function Settings() {
   const [date, setDate] = useState('')
@@ -6,6 +7,7 @@ export default function Settings() {
   const [version, setVersion] = useState('')
   const [latestVersion, setLatestVersion] = useState('')
   const [updateStatus, setUpdateStatus] = useState('')
+  const [checkingUpdate, setCheckingUpdate] = useState(false)
 
   useEffect(() => {
     window.settingsAPI.get().then((data) => {
@@ -27,28 +29,56 @@ export default function Settings() {
   }
 
   useEffect(() => {
-    window.settingsAPI.get().then((data) => {
-      setDate(data.date)
-      setColor(data.color)
-    })
-
     window.appVersion.getVersion().then(setVersion)
 
-    window.appVersion.onUpdateAvailable((data) => {
+    const runCheck = async () => {
+      setCheckingUpdate(true)
+
+      const res = await window.appVersion.checkForUpdates()
+
+      setCheckingUpdate(false)
+
+      if (res.status === 'available') {
+        setLatestVersion(res.version)
+        setUpdateStatus('Доступно обновление')
+      }
+
+      if (res.status === 'none') {
+        setUpdateStatus('Обновлений нет')
+      }
+
+      if (res.status === 'error') {
+        setUpdateStatus('Ошибка: ' + res.message)
+      }
+
+      if (res.status === 'timeout') {
+        setUpdateStatus('Проверка заняла слишком много времени')
+      }
+    }
+
+    runCheck()
+
+    const unsub1 = window.appVersion.onUpdateAvailable((data) => {
       setLatestVersion(data.version)
-      console.log(1)
       setUpdateStatus('Доступно обновление')
+      setCheckingUpdate(false)
     })
 
-    window.appVersion.onNoUpdate(() => {
-      console.log(2)
+    const unsub2 = window.appVersion.onNoUpdate(() => {
       setUpdateStatus('Обновлений нет')
+      setCheckingUpdate(false)
     })
 
-    window.appVersion.onUpdateError((msg) => {
-      console.log(3)
+    const unsub3 = window.appVersion.onUpdateError((msg) => {
       setUpdateStatus('Ошибка: ' + msg)
+      setCheckingUpdate(false)
     })
+
+    return () => {
+      unsub1?.()
+      unsub2?.()
+      unsub3?.()
+    }
   }, [])
 
   return (
@@ -74,9 +104,19 @@ export default function Settings() {
 
       <div className="version">Текущая версия: {version}</div>
 
-      <div className="status">Статус: {updateStatus}</div>
+      <div className="status">
+        Статус: {updateStatus}
+        {checkingUpdate && <span className="loader"> Проверка...</span>}
+      </div>
 
-      {latestVersion && <div className="badge">Последняя версия: {latestVersion}</div>}
+      {latestVersion && (
+        <div className="badge">
+          Последняя версия: {latestVersion}
+          {checkingUpdate && <span className="loader"> Проверка...</span>}
+        </div>
+      )}
+
+      <UpdateButton />
     </div>
   )
 }

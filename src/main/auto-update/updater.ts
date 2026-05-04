@@ -11,7 +11,7 @@ export function initAutoUpdater() {
   if (!app.isPackaged) return
 
   autoUpdater.logger = console
-  autoUpdater.autoDownload = true
+  autoUpdater.autoDownload = false
 
   autoUpdater.setFeedURL({
     provider: 'github',
@@ -19,8 +19,6 @@ export function initAutoUpdater() {
     repo: 'electron-timer',
     private: false
   })
-
-  autoUpdater.checkForUpdates()
 
   autoUpdater.on('update-available', (info) => {
     console.log('Update available', info.version)

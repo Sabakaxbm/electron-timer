@@ -4,6 +4,7 @@ import { createMainWindow } from './windows/main-window'
 import { registerSettingsIpc } from './ipc/settings'
 import { initAutoUpdater } from './auto-update/updater'
 import { registerAppIpc } from './ipc/app'
+import { registerAppUpdateIpc } from './ipc/ipc-updates'
 
 app.whenReady().then(() => {
   electronApp.setAppUserModelId('com.electron')
@@ -14,6 +15,7 @@ app.whenReady().then(() => {
 
   registerAppIpc()
   registerSettingsIpc()
+  registerAppUpdateIpc()
 
   createMainWindow()
   initAutoUpdater()

@@ -14,7 +14,7 @@ export function openSettingsWindow(): void {
 
   settingsWindow = new BrowserWindow({
     width: 520,
-    height: 480,
+    height: 500,
 
     resizable: false,
     maximizable: false,
