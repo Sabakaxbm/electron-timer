@@ -5,7 +5,7 @@ import { is } from '@electron-toolkit/utils'
 export function createMainWindow() {
   const win = new BrowserWindow({
     width: 300,
-    height: 120,
+    height: 90,
     transparent: true,
     frame: false,
     alwaysOnTop: true,

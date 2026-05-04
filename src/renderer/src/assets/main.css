@@ -1,16 +1,28 @@
 html, body {
+  height: 100%;
+  overflow: hidden;
   margin: 0;
   padding: 0;
-  overflow: hidden;
   background: transparent;
+  scroll-behavior: smooth;
+}
+
+#root {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
 }
 
 .app {
-  -webkit-app-region: drag;
-  display: inline-block;
-  width: fit-content;
-  height: fit-content;
+  width: 100%;
+  height: 100%;
+
   padding: 10px;
+  box-sizing: border-box;
+
+  -webkit-app-region: drag;
+  display: flex;
+  overflow: hidden;
 }
 
 /* основная карточка */
@@ -42,8 +54,6 @@ html, body {
   font-weight: bold;
   color: #00ffff;
   text-shadow: 0 0 12px rgba(0, 255, 255, 0.8);
-
-
 }
 
 .label {
@@ -70,6 +80,7 @@ html, body {
   font-size: 40px;
   color: #00ff99;
   text-shadow: 0 0 15px rgba(0, 255, 150, 0.8);
-
-
 }
+
+
+

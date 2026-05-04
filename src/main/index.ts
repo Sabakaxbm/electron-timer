@@ -15,7 +15,6 @@ app.whenReady().then(() => {
   registerAppIpc()
   registerSettingsIpc()
 
-
   createMainWindow()
   initAutoUpdater()
 })

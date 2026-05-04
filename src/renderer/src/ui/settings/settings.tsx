@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import '../assets/settings.css'
 
 export default function Settings() {
   const [date, setDate] = useState('')
