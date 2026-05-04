@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import '../assets/settings.css'
 
 export default function Settings() {
   const [date, setDate] = useState('')
@@ -52,31 +53,31 @@ export default function Settings() {
   }, [])
 
   return (
-    <div>
+    <div className="container">
       <h1>Settings</h1>
 
-      <div>
-        <label>Date</label>
-        <input type="datetime-local" value={date} onChange={(e) => setDate(e.target.value)} />
-      </div>
+      <label>Date</label>
+      <input type="datetime-local" value={date} onChange={(e) => setDate(e.target.value)} />
 
-      <div>
-        <label>Color</label>
-        <input type="color" value={color} onChange={(e) => setColor(e.target.value)} />
-      </div>
+      <label>Color</label>
+      <input type="color" value={color} onChange={(e) => setColor(e.target.value)} />
 
-      <button onClick={save}>Save</button>
-      <button onClick={reset}>Reset</button>
+      <div className="buttons">
+        <button className="save" onClick={save}>
+          Save
+        </button>
+        <button className="reset" onClick={reset}>
+          Reset
+        </button>
+      </div>
 
       <hr />
 
-      <div>
-        <p>Текущая версия: {version}</p>
+      <div className="version">Текущая версия: {version}</div>
 
-        <p>Статус: {updateStatus}</p>
+      <div className="status">Статус: {updateStatus}</div>
 
-        {latestVersion && <p>Последняя версия: {latestVersion}</p>}
-      </div>
+      {latestVersion && <div className="badge">Последняя версия: {latestVersion}</div>}
     </div>
   )
 }
